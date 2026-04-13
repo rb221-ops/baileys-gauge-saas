@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Heart, TrendingUp, AlertCircle, LogOut } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { Heart, TrendingUp, AlertCircle, } from 'lucide-react';
 
 const App = () => {
   const [page, setPage] = useState('landing');
@@ -18,8 +18,7 @@ const App = () => {
   const [alertPrice, setAlertPrice] = useState('');
   const [alertTicker, setAlertTicker] = useState('');
   const [activeTab, setActiveTab] = useState('screener');
-  const [subscriptionTier, setSubscriptionTier] = useState('trial');
-  const [trialDaysLeft, setTrialDaysLeft] = useState(7);
+  
 
   const generateStockData = (ticker) => ({
     ticker: ticker.toUpperCase(),
