@@ -1,17 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Bailey's Gauge - Professional Stock Scanner"
-    />
-    <title>Bailey's Gauge - Stock Scanner</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bailey's Gauge - Professional Stock Scanner</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui; background: linear-gradient(135deg, #0a0a14 0%, #1a1a2e 100%); color: white; }
+    .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+    nav { background: rgba(10,10,20,0.9); border-bottom: 1px solid rgba(0,217,255,0.1); padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; }
+    nav h1 { font-size: 26px; font-weight: 800; color: #00d9ff; }
+    .nav-buttons { display: flex; gap: 1rem; }
+    button { padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; border: none; transition: all 0.3s; }
+    .btn-outline { background: transparent; color: #00d9ff; border: 2px solid #00d9ff; }
+    .btn-primary { background: #00d9ff; color: #0a0a14; }
+    .btn-primary:hover { box-shadow: 0 20px 40px rgba(0,217,255,0.3); }
+    .landing { text-align: center; padding: 5rem 2rem; }
+    .landing h2 { font-size: 64px; font-weight: 900; margin-bottom: 1.5rem; color: #00d9ff; line-height: 1.1; }
+    .landing p { font-size: 18px; color: #aaa; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 4rem; }
+    .feature { background: rgba(0,217,255,0.05); border: 1px solid rgba(0,217,255,0.2); padding: 2rem; border-radius: 12px; }
+    .feature-icon { font-size: 40px; margin-bottom: 1rem; }
+    .feature h3 { margin: 0 0 0.5rem; font-size: 18px; }
+    .feature p { margin: 0; color: #aaa; font-size: 14px; }
+    .pricing { background: rgba(0,217,255,0.05); border: 1px solid rgba(0,217,255,0.2); padding: 3rem 2rem; border-radius: 12px; margin-top: 4rem; }
+    .pricing h3 { margin: 0 0 2rem; font-size: 24px; text-align: center; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+    .plan { background: transparent; border: 1px solid rgba(0,217,255,0.2); padding: 2rem; border-radius: 12px; }
+    .plan.highlighted { background: rgba(0,217,255,0.15); border: 2px solid #00d9ff; }
+    .plan h4 { margin: 0 0 0.5rem; font-size: 20px; }
+    .plan-price { margin: 0 0 1rem; font-size: 32px; font-weight: 800; color: #00d9ff; }
+    .plan-price span { font-size: 14px; color: #aaa; }
+    .plan ul { list-style: none; margin: 0 0 1.5rem; }
+    .plan li { margin: 0.75rem 0; color: #aaa; font-size: 13px; }
+    .auth-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .auth-box { max-width: 450px; width: 100%; background: rgba(26,26,46,0.8); padding: 3rem; border-radius: 12px; border: 1px solid rgba(0,217,255,0.1); }
+    .auth-box h2 { text-align: center; margin-top: 0; margin-bottom: 2rem; font-size: 28px; }
+    input { width: 100%; padding: 0.875rem; margin-bottom: 1rem; border-radius: 8px; border: 1px solid rgba(0,217,255,0.2); background: rgba(10,10,20,0.5); color: white; font-size: 14px; }
+    .app-page { display: flex; min-height: 100vh; }
+    .sidebar { width: 280px; background: rgba(26,26,46,0.8); border-right: 1px solid rgba(0,217,255,0.1); padding: 2rem; overflow-y: auto; }
+    .sidebar h2 { margin: 0 0 2rem; font-size: 18px; color: #00d9ff; }
+    .sidebar-btn { width: 100%; padding: 0.75rem; background: transparent; color: #aaa; border: none; text-align: left; cursor: pointer; font-size: 13px; margin-bottom: 0.5rem; border-left: 3px solid transparent; }
+    .sidebar-btn.active { background: rgba(0,217,255,0.15); color: #00d9ff; border-left: 3px solid #00d9ff; }
+    .main-content { flex: 1; padding: 2rem; overflow-y: auto; }
+    .search-bar { display: flex; gap: 1rem; margin-bottom: 2rem; }
+    .search-bar input { flex: 1; }
+    .stock-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+    .stock-card { background: rgba(0,217,255,0.05); border: 1px solid rgba(0,217,255,0.2); border-radius: 12px; padding: 1.5rem; cursor: pointer; }
+    .stock-card:hover { border-color: #00d9ff; }
+    .stock-ticker { font-size: 22px; font-weight: 800; margin-bottom: 0.5rem; }
+    .stock-price { color: #00d9ff; font-size: 11px; font-weight: 600; margin-bottom: 1rem; }
+    .stock-change { color: #4ade80; font-weight: 700; font-size: 16px; margin-bottom: 1rem; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>Bailey's Gauge</h1>
+    <div class="nav-buttons">
+      <button class="btn-outline" onclick="showAuth(false)">Sign In</button>
+      <button class="btn-primary" onclick="showAuth(true)">Start Free Trial</button>
+    </div>
+  </nav>
+
+  <!-- LANDING PAGE -->
+  <div id="landing" class="landing">
+    <h2>Professional Day Trading Scanner</h2>
+    <p>Real-time stock analysis. Technical indicators. Price alerts. Find winning trades before they move.</p>
+    <button class="btn-primary" onclick="showAuth(true)" style="padding: 1rem 2.5rem; font-size: 16px; margin-right: 1rem;">Start 7-Day Free Trial →</button>
+
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">📊</div>
+        <h3>50+ Indicators</h3>
+        <p>RSI, MACD, Bollinger, SMA, EMA</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔔</div>
+        <h3>Price Alerts</h3>
+        <p>Real-time notifications</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">❤️</div>
+        <h3>Watchlists</h3>
+        <p>Track your stocks</p>
+      </div>
+    </div>
+
+    <div class="pricing">
+      <h3>Simple Pricing</h3>
+      <div class="pricing-grid">
+        <div class="plan">
+          <h4>Trial</h4>
+          <p class="plan-price">FREE<span> 7 Days</span></p>
+          <ul>
+            <li>✓ Full access</li>
+            <li>✓ 50+ indicators</li>
+            <li>✓ Alerts</li>
+            <li>✓ Watchlist</li>
+          </ul>
+          <button class="btn-primary" onclick="showAuth(true)" style="width: 100%;">Get Started</button>
+        </div>
+        <div class="plan highlighted">
+          <h4>Pro</h4>
+          <p class="plan-price">$29<span>/month</span></p>
+          <ul>
+            <li>✓ Unlimited scans</li>
+            <li>✓ All indicators</li>
+            <li>✓ Unlimited alerts</li>
+            <li>✓ 24/7 support</li>
+          </ul>
+          <button class="btn-primary" onclick="showAuth(true)" style="width: 100%;">Get Started</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH PAGE -->
+  <div id="auth" class="hidden auth-page">
+    <div class="auth-box">
+      <h2 id="auth-title">Sign In</h2>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <input type="text" id="name" placeholder="Full Name" style="display: none;" required>
+      <button class="btn-primary" onclick="handleAuth()" style="width: 100%; margin-bottom: 1rem;">Sign In</button>
+      <p style="text-align: center; color: #aaa; margin-top: 1.5rem;">
+        <span id="auth-toggle">Don't have an account?</span>
+        <button onclick="toggleAuth()" style="background: none; border: none; color: #00d9ff; cursor: pointer; font-weight: 700;">Sign Up</button>
+      </p>
+      <button onclick="showLanding()" style="width: 100%; margin-top: 1rem; background: transparent; color: #aaa; border: 1px solid rgba(0,217,255,0.2); border-radius: 8px; padding: 0.75rem;">← Back to Home</button>
+    </div>
+  </div>
+
+  <!-- APP PAGE -->
+  <div id="app" class="hidden app-page">
+    <div class="sidebar">
+      <h2>Bailey's Gauge</h2>
+      <button class="sidebar-btn active" onclick="setTab('screener')">📊 Screener</button>
+      <button class="sidebar-btn" onclick="setTab('watchlist')">❤️ Watchlist</button>
+      <button class="sidebar-btn" onclick="setTab('alerts')">🔔 Alerts</button>
+      <div style="margin-top: 2rem; border-top: 1px solid rgba(0,217,255,0.1); padding-top: 1.5rem;">
+        <button onclick="handleLogout()" style="width: 100%; padding: 0.75rem; background: transparent; color: #ff6b6b; border: 1px solid rgba(255,107,107,0.3); border-radius: 6px; cursor: 'pointer'; font-weight: 600; font-size: 12px;">Sign Out</button>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div id="screener">
+        <div class="search-bar">
+          <input type="text" id="scanInput" placeholder="AAPL,MSFT,GOOGL...">
+          <button class="btn-primary" onclick="handleScan()">Scan</button>
+        </div>
+        <div id="results"></div>
+      </div>
+
+      <div id="watchlist" class="hidden">
+        <h2>Watchlist</h2>
+        <div id="watchlistContent"></div>
+      </div>
+
+      <div id="alerts" class="hidden">
+        <h2>Alerts</h2>
+        <div id="alertsContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = 'https://baileys-gauge-saas.onrender.com';
+    let isSignUp = false;
+    let scanResults = [];
+    let watchlist = [];
+    let alerts = [];
+
+    function showLanding() { document.getElementById('landing').classList.remove('hidden'); document.getElementById('auth').classList.add('hidden'); document.getElementById('app').classList.add('hidden'); }
+    function showAuth(signup) { isSignUp = signup; document.getElementById('auth-title').textContent = signup ? 'Create Account' : 'Sign In'; document.getElementById('name').style.display = signup ? 'block' : 'none'; document.getElementById('auth-toggle').textContent = signup ? 'Have an account?' : "Don't have an account?"; document.getElementById('landing').classList.add('hidden'); document.getElementById('auth').classList.remove('hidden'); document.getElementById('app').classList.add('hidden'); }
+    function showApp() { document.getElementById('landing').classList.add('hidden'); document.getElementById('auth').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); }
+    function toggleAuth() { isSignUp = !isSignUp; showAuth(isSignUp); }
+    function setTab(tab) { document.getElementById('screener').classList.toggle('hidden', tab !== 'screener'); document.getElementById('watchlist').classList.toggle('hidden', tab !== 'watchlist'); document.getElementById('alerts').classList.toggle('hidden', tab !== 'alerts'); document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); }
+
+    async function handleAuth() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const name = document.getElementById('name').value;
+      
+      try {
+        const res = await fetch(`${API}/api/auth/${isSignUp ? 'register' : 'login'}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(isSignUp ? { email, password, name } : { email, password })
+        });
+        const data = await res.json();
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          showApp();
+        } else {
+          alert('Error: ' + (data.error || 'Failed'));
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    async function handleScan() {
+      const input = document.getElementById('scanInput').value;
+      if (!input.trim()) { alert('Enter tickers'); return; }
+      
+      const tickers = input.split(',').map(t => t.trim());
+      const token = localStorage.getItem('token');
+      
+      try {
+        const res = await fetch(`${API}/api/scan`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ tickers })
+        });
+        const data = await res.json();
+        scanResults = data.results || [];
+        
+        let html = '<h2>Results (' + scanResults.length + ')</h2><div class="stock-grid">';
+        scanResults.forEach(stock => {
+          html += `<div class="stock-card"><div class="stock-ticker">${stock.ticker}</div><div class="stock-price">$${stock.price}</div><div class="stock-change">${stock.change > 0 ? '▲' : '▼'} ${stock.change}%</div><button onclick="toggleWatch('${stock.ticker}')" style="width: 100%; padding: 0.75rem; background: ${watchlist.includes(stock.ticker) ? '#ff6b6b' : 'rgba(0,217,255,0.2)'}; color: ${watchlist.includes(stock.ticker) ? 'white' : '#00d9ff'}; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">❤️ ${watchlist.includes(stock.ticker) ? 'Remove' : 'Add to Watchlist'}</button></div>`;
+        });
+        html += '</div>';
+        document.getElementById('results').innerHTML = html;
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    }
+
+    function toggleWatch(ticker) {
+      if (watchlist.includes(ticker)) {
+        watchlist = watchlist.filter(t => t !== ticker);
+      } else {
+        watchlist.push(ticker);
+      }
+      updateWatchlist();
+    }
+
+    function updateWatchlist() {
+      const items = scanResults.filter(s => watchlist.includes(s.ticker));
+      let html = items.length ? '<div class="stock-grid">' : '<p>No stocks in watchlist</p>';
+      items.forEach(stock => {
+        html += `<div class="stock-card"><div class="stock-ticker">${stock.ticker}</div><div class="stock-price">$${stock.price}</div><div class="stock-change">${stock.change > 0 ? '▲' : '▼'} ${stock.change}%</div><button onclick="toggleWatch('${stock.ticker}')" style="width: 100%; padding: 0.75rem; background: #ff6b6b; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Remove</button></div>`;
+      });
+      html += '</div>';
+      document.getElementById('watchlistContent').innerHTML = html;
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('token');
+      showLanding();
+    }
+
+    // Check if logged in
+    if (localStorage.getItem('token')) {
+      showApp();
+    } else {
+      showLanding();
+    }
+  </script>
+</body>
 </html>
