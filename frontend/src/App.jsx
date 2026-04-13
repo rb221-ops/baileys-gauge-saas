@@ -430,7 +430,7 @@ const App = () => {
                   <h2 style={{ margin: '1rem 0 2rem', fontSize: mobileView ? '18px' : '24px', fontWeight: '700' }}>Results ({scanResults.length})</h2>
                   <div style={{ display: 'grid', gridTemplateColumns: mobileView ? '1fr' : 'repeat(auto-fit, minmax(550px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
                     {scanResults.map((stock, i) => (
-                      <div key={i} onClick={() => { setSelectedStock(stock); setChartData(generateChartData()); setLines([]); }} style={{ background: 'rgba(0,217,255,0.05)', border: selectedStock?.ticker === stock.ticker ? '2px solid #00d9ff' : '1px solid rgba(0,217,255,0.2)', borderRadius: '12px', padding: mobileView ? '1rem' : '1.5rem', cursor: 'pointer', transition: 'all 0.3s' }}>
+                      <div key={i} onClick={() => { setSelectedStock(stock); setLines([]); }} style={{ background: 'rgba(0,217,255,0.05)', border: selectedStock?.ticker === stock.ticker ? '2px solid #00d9ff' : '1px solid rgba(0,217,255,0.2)', borderRadius: '12px', padding: mobileView ? '1rem' : '1.5rem', cursor: 'pointer', transition: 'all 0.3s' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
                           <div>
                             <h3 style={{ margin: '0 0 0.25rem', fontSize: mobileView ? '18px' : '22px', fontWeight: '800' }}>{stock.ticker}</h3>
@@ -442,7 +442,7 @@ const App = () => {
                           {stock.change > 0 ? '▲' : '▼'} {stock.change}% ({stock.percentChange}%)
                         </p>
                         <ResponsiveContainer width="100%" height={mobileView ? 100 : 150}>
-                          <LineChart data={generateChartData()}>
+                         
                             <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,217,255,0.1)" />
                             <XAxis dataKey="time" stroke="#666" style={{ fontSize: '10px' }} />
                             <YAxis stroke="#666" style={{ fontSize: '10px' }} />
