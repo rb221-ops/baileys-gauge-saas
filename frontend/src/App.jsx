@@ -22,7 +22,6 @@ const App = () => {
   const [subscriptionTier, setSubscriptionTier] = useState('trial');
   const [trialDaysLeft, setTrialDaysLeft] = useState(7);
   const [mobileView, setMobileView] = useState(window.innerWidth < 768);
-  const [chartData, setChartData] = useState([]);
   const [lines, setLines] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [drawMode, setDrawMode] = useState(null);
@@ -30,7 +29,7 @@ const App = () => {
   const [startPoint, setStartPoint] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('day-trading');
   const [showDemoModal, setShowDemoModal] = useState(false);
-  const [adminStats, setAdminStats] = useState({ users: 1250, revenue: '$45,320', subs: 380 });
+ 
 
   React.useEffect(() => {
     const handleResize = () => setMobileView(window.innerWidth < 768);
