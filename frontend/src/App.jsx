@@ -226,7 +226,6 @@ const App = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('accountCreatedDate');
     setIsLoggedIn(false);
-    setIsAdmin(false);
     setPage('landing');
     setScanResults([]);
     setSelectedStock(null);
